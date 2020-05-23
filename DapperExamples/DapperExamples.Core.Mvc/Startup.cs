@@ -26,8 +26,8 @@ namespace DapperExamples
             //***
             //*** Register the required database context based on need
             //***
-            //IDatabaseContext dbContext = new SqliteDatabaseContext();
-            IDatabaseStrategy dbContext = new SqlDatabaseStrategy();
+            IDatabaseStrategy dbContext = new SqliteDatabaseStrategy();
+            //IDatabaseStrategy dbContext = new SqlDatabaseStrategy();
             //***
             //*** Seed the database
             //***
@@ -35,7 +35,7 @@ namespace DapperExamples
             //***
             //*** Register the instance of IDatabaseContext for DO
             //***
-            services.AddTransient<IDatabaseStrategy, SqlDatabaseStrategy>();
+            services.AddTransient<IDatabaseStrategy, SqliteDatabaseStrategy>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

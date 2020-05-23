@@ -4,7 +4,7 @@ using DapperExamples.Abstraction;
 using DapperExamples.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using System.Linq; 
+using System.Linq;
 #endregion
 
 namespace DapperExamples.Controllers
@@ -46,9 +46,7 @@ namespace DapperExamples.Controllers
                 //***
                 //***  Add new user to the database
                 //***
-                _ = connection.Execute(@"insert into [AppUser](FirstName, LastName, Age) values (@firstName, @lastName, @age)",
-                           new { firstName = model.FirstName, lastName = model.LastName, age = model.Age }
-                   );
+                _ = connection.Execute(@"insert into [AppUser](FirstName, LastName, Age) values (@FirstName, @LastName, @Age)", model);
                 return RedirectToAction("Index");
             }
         }
@@ -61,7 +59,7 @@ namespace DapperExamples.Controllers
                 //***
                 //***  Get user info from the table based on ID
                 //***
-                var data = connection.Query<UserDto>("select * from [AppUser] where Id = @id", new { id = id }).First();
+                var data = connection.QueryFirstOrDefault<UserDto>("select * from [AppUser] where Id = @id", new { id = id });
                 return View(data);
             }
         }
@@ -74,7 +72,7 @@ namespace DapperExamples.Controllers
                 //***
                 //***  Get user info from the table based on ID
                 //***
-                var data = connection.Query<UserDto>("select * from [AppUser] where Id = @id", new { id = id }).First();
+                var data = connection.QueryFirstOrDefault<UserDto>("select * from [AppUser] where Id = @id", new { id = id });
                 return View(data);
             }
         }
@@ -87,8 +85,7 @@ namespace DapperExamples.Controllers
                 //***
                 //***  Update entity properties in the database
                 //***
-                _ = connection.Execute(@"Update [AppUser] set FirstName = @firstName, LastName = @lastName, Age = @age where Id = @id",
-                           new { firstName = model.FirstName, lastName = model.LastName, age = model.Age, id = model.Id });
+                _ = connection.Execute(@"Update [AppUser] set FirstName = @FirstName, LastName = @LastName, Age = @Age where Id = @Id", model);
                 return RedirectToAction("Index");
             }
         }
