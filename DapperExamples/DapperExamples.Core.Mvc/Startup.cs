@@ -1,3 +1,4 @@
+#region USING
 using DapperExamples.Abstraction;
 using DapperExamples.DAL;
 using Microsoft.AspNetCore.Builder;
@@ -6,6 +7,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
+#endregion
 namespace DapperExamples
 {
     public class Startup
@@ -21,12 +23,19 @@ namespace DapperExamples
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews();
-
+            //***
+            //*** Register the required database context based on need
+            //***
             //IDatabaseContext dbContext = new SqliteDatabaseContext();
-            IDatabaseContext dbContext = new SqlDatabaseContext();
+            IDatabaseStrategy dbContext = new SqlDatabaseStrategy();
+            //***
+            //*** Seed the database
+            //***
             dbContext.SeedDatabase();
-
-            services.AddTransient<IDatabaseContext, SqlDatabaseContext>();
+            //***
+            //*** Register the instance of IDatabaseContext for DO
+            //***
+            services.AddTransient<IDatabaseStrategy, SqlDatabaseStrategy>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

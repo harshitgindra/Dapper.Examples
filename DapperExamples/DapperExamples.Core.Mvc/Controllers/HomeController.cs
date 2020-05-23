@@ -1,18 +1,20 @@
-﻿using Dapper;
+﻿#region USING
+using Dapper;
 using DapperExamples.Abstraction;
 using DapperExamples.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using System.Linq;
+using System.Linq; 
+#endregion
 
 namespace DapperExamples.Controllers
 {
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
-        private readonly IDatabaseContext _databaseContext;
+        private readonly IDatabaseStrategy _databaseContext;
 
-        public HomeController(ILogger<HomeController> logger, IDatabaseContext databaseContext)
+        public HomeController(ILogger<HomeController> logger, IDatabaseStrategy databaseContext)
         {
             _logger = logger;
             _databaseContext = databaseContext;
@@ -22,6 +24,9 @@ namespace DapperExamples.Controllers
         {
             using (var connection = _databaseContext.Connection)
             {
+                //***
+                //***  Execute query to get all data from the table
+                //***
                 var data = connection.Query<UserDto>("select * from [AppUser]");
                 return View(data);
             }
@@ -38,7 +43,10 @@ namespace DapperExamples.Controllers
         {
             using (var connection = _databaseContext.Connection)
             {
-                int count = connection.Execute(@"insert into [AppUser](FirstName, LastName, Age) values (@firstName, @lastName, @age)",
+                //***
+                //***  Add new user to the database
+                //***
+                _ = connection.Execute(@"insert into [AppUser](FirstName, LastName, Age) values (@firstName, @lastName, @age)",
                            new { firstName = model.FirstName, lastName = model.LastName, age = model.Age }
                    );
                 return RedirectToAction("Index");
@@ -50,6 +58,9 @@ namespace DapperExamples.Controllers
         {
             using (var connection = _databaseContext.Connection)
             {
+                //***
+                //***  Get user info from the table based on ID
+                //***
                 var data = connection.Query<UserDto>("select * from [AppUser] where Id = @id", new { id = id }).First();
                 return View(data);
             }
@@ -60,6 +71,9 @@ namespace DapperExamples.Controllers
         {
             using (var connection = _databaseContext.Connection)
             {
+                //***
+                //***  Get user info from the table based on ID
+                //***
                 var data = connection.Query<UserDto>("select * from [AppUser] where Id = @id", new { id = id }).First();
                 return View(data);
             }
@@ -70,7 +84,10 @@ namespace DapperExamples.Controllers
         {
             using (var connection = _databaseContext.Connection)
             {
-                int count = connection.Execute(@"Update [AppUser] set FirstName = @firstName, LastName = @lastName, Age = @age where Id = @id",
+                //***
+                //***  Update entity properties in the database
+                //***
+                _ = connection.Execute(@"Update [AppUser] set FirstName = @firstName, LastName = @lastName, Age = @age where Id = @id",
                            new { firstName = model.FirstName, lastName = model.LastName, age = model.Age, id = model.Id });
                 return RedirectToAction("Index");
             }
@@ -81,6 +98,9 @@ namespace DapperExamples.Controllers
         {
             using (var connection = _databaseContext.Connection)
             {
+                //***
+                //***  Delete the record fro the database based on ID
+                //***
                 var data = connection.Query<UserDto>("Delete from [AppUser] where Id = @id", new { id = id });
                 return RedirectToAction("Index");
             }

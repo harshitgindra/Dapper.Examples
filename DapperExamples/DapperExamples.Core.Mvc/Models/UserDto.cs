@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace DapperExamples.Models
 {
@@ -17,8 +13,19 @@ namespace DapperExamples.Models
         [Display(Name = "ID")]
         public virtual int Id { get; set; }
 
-        [Column("FirstName")] [Required] [Display(Name = "First Name")] public virtual string FirstName { get; set; }
-        [Column("LastName")] [Required] [Display(Name = "Last Name")] public virtual string LastName { get; set; }
-        [Column("Age")] [Required] [Display(Name = "Age")] public virtual int Age { get; set; }
+        [Column("FirstName")]
+        [Required]
+        [Display(Name = "First Name")]
+        public virtual string FirstName { get; set; }
+
+        [Column("LastName")]
+        [Required]
+        [Display(Name = "Last Name")]
+        public virtual string LastName { get; set; }
+
+        [Column("Age")]
+        [Required]
+        [Display(Name = "Age")]
+        public virtual int Age { get; set; }
     }
 }
