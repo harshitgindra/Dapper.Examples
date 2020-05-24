@@ -3,8 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace DapperExamples.Models
 {
-    [Table("Location", Schema = "dbo")]
-    public class UserDto
+    public class AppUserDto
     {
         [Key]
         [Column("Id")]

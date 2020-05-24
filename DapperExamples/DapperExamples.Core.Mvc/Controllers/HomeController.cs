@@ -4,7 +4,6 @@ using DapperExamples.Abstraction;
 using DapperExamples.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using System.Linq;
 #endregion
 
 namespace DapperExamples.Controllers
@@ -27,7 +26,7 @@ namespace DapperExamples.Controllers
                 //***
                 //***  Execute query to get all data from the table
                 //***
-                var data = connection.Query<UserDto>("select * from [AppUser]");
+                var data = connection.Query<AppUserDto>("select * from [AppUser]");
                 return View(data);
             }
         }
@@ -35,11 +34,11 @@ namespace DapperExamples.Controllers
         [HttpGet]
         public IActionResult Add()
         {
-            return View(new UserDto());
+            return View(new AppUserDto());
         }
 
         [HttpPost]
-        public IActionResult Add(UserDto model)
+        public IActionResult Add(AppUserDto model)
         {
             using (var connection = _databaseContext.Connection)
             {
@@ -59,7 +58,7 @@ namespace DapperExamples.Controllers
                 //***
                 //***  Get user info from the table based on ID
                 //***
-                var data = connection.QueryFirstOrDefault<UserDto>("select * from [AppUser] where Id = @id", new { id = id });
+                var data = connection.QueryFirstOrDefault<AppUserDto>("select * from [AppUser] where Id = @id", new { id = id });
                 return View(data);
             }
         }
@@ -72,21 +71,39 @@ namespace DapperExamples.Controllers
                 //***
                 //***  Get user info from the table based on ID
                 //***
-                var data = connection.QueryFirstOrDefault<UserDto>("select * from [AppUser] where Id = @id", new { id = id });
+                var data = connection.QueryFirstOrDefault<AppUserDto>("select * from [AppUser] where Id = @id", new { id = id });
                 return View(data);
             }
         }
 
         [HttpPost]
-        public IActionResult Edit(UserDto model)
+        public IActionResult Edit(AppUserDto model)
         {
             using (var connection = _databaseContext.Connection)
             {
-                //***
-                //***  Update entity properties in the database
-                //***
-                _ = connection.Execute(@"Update [AppUser] set FirstName = @FirstName, LastName = @LastName, Age = @Age where Id = @Id", model);
-                return RedirectToAction("Index");
+                using (var transaction = connection.BeginTransaction())
+                {
+                    try
+                    {
+                        //***
+                        //***  Update entity properties in the database
+                        //***
+                        _ = connection.Execute(@"Update [AppUser] set FirstName = @FirstName, LastName = @LastName, Age = @Age where Id = @Id", model);
+                        //***
+                        //*** Commit the changes to the dB
+                        //***
+                        transaction.Commit();
+                    }
+                    catch
+                    {
+                        //***
+                        //*** Rollback the changes added as paart of the transaction
+                        //***
+                        transaction.Rollback();
+                    }
+
+                    return RedirectToAction("Index");
+                }
             }
         }
 
@@ -98,7 +115,7 @@ namespace DapperExamples.Controllers
                 //***
                 //***  Delete the record fro the database based on ID
                 //***
-                var data = connection.Query<UserDto>("Delete from [AppUser] where Id = @id", new { id = id });
+                var data = connection.Query<AppUserDto>("Delete from [AppUser] where Id = @id", new { id = id });
                 return RedirectToAction("Index");
             }
         }
