@@ -2,9 +2,7 @@
 # This .gitignore file was automatically created by Microsoft(R) Visual Studio.
 ################################################################################
 
-/DapperExamples/.vs/DapperExamples
-/DapperExamples/DapperExamples.Core.Mvc/bin/Debug/netcoreapp3.1
-/DapperExamples/DapperExamples.Core.Mvc/obj
-/.vs/Dapper.Examples/v16
-/DapperExamples/DapperExamples.Core.Mvc/bin/Debug/net5.0
-/.vs
+.idea
+.vs
+bin
+obj
